@@ -1,5 +1,16 @@
 # Simulated Escrow Service
 
+An escrow service that holds money until both parties agree the conditions of a deal are met.
+
+Imagine:
+* Buyer pays money → Money goes into escrow (held temporarily)
+* Seller delivers item/service
+* Buyer confirms delivery → Escrow releases money to seller
+* If dispute → money is returned
+
+The system simulates this logic with clean software architecture and a blockchain-style immutable ledger.
+
+
 ## Project Structure
 
 ```
@@ -50,3 +61,4 @@ escrow-service/
 
 ---
 
+**NB:** This project is still ongoing ......
