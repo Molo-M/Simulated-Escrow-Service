@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 
 const app = express();
 
+// Connect to MongoDB Database:
 mongoose
     .connect("mongodb://localhost/escrow_service")
     .then(() => console.log("Connected to Database!"))
