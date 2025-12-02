@@ -1,12 +1,25 @@
 import express from 'express';
+import authRouter from "./routes/auth.js";
+import mongoose from 'mongoose';
 
 const app = express();
 
+mongoose
+    .connect("mongodb://localhost/escrow_service")
+    .then(() => console.log("Connected to Database!"))
+    .catch((err) => console.log(`Error: ${err}`))
+
 const PORT = process.env.PORT || 3000;
 
+// Allow Express to parse JSON
+app.use(express.json());
+
+// Authentication Route
+app.use(authRouter);
+
 app.get("/", (req, res) => {
-    res.status(201).send("Hello, World!")
-})
+    res.status(200).send("Hello, World!")
+});
 
 app.listen(PORT, () => {
     console.log(`Running on Port ${PORT}`)
