@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import jwt from "jsonwebtoken";
 
 // Encrypting Password
 const saltRounds = 10;
@@ -12,3 +13,8 @@ export const hashPassword = (password) => {
 export const comparePassword = (plain, hashed) => {
     return bcrypt.compareSync(plain, hashed);
 };
+
+// Generate JWT token
+export const generateToken = (id) => {
+    return jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: "30d"});
+}

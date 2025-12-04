@@ -1,6 +1,7 @@
 import { response, Router } from "express";
 import { User } from "../models/User.js";
-import { comparePassword, hashPassword } from "../utils/helpers.js";
+import { comparePassword, generateToken, hashPassword } from "../utils/helpers.js";
+import jwt from "jsonwebtoken";
 
 const router = Router();
 
@@ -14,6 +15,8 @@ router.post("/auth/register", async (request, response) => {
     const newUser = new User(body);
     try {
         const savedUser = await newUser.save();
+        const token = generateToken(savedUser._id);
+        console.log(`Token: \n ${token}`);
         return response.status(201).send(savedUser);
     } catch (error) {
         console.log(error);
@@ -26,6 +29,8 @@ router.post("/auth/login", async (request, response) => {
         const findUser = await User.findOne({ name: request.body.name});
         if (!findUser) throw new Error("User not found!");
         if (!comparePassword(request.body.passwordHash, findUser.passwordHash)) throw new Error("Bad Credentials!");
+        const token = generateToken(findUser._id);
+        console.log(`Token: \n ${token}`);
         response.sendStatus(200);
     } catch (error) {
         console.log(error);

@@ -1,6 +1,8 @@
 import express from 'express';
 import authRouter from "./routes/auth.js";
 import mongoose from 'mongoose';
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 
