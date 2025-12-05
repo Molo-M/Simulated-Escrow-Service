@@ -11,7 +11,7 @@ Imagine:
 The system simulates this logic with clean software architecture and a blockchain-style immutable ledger.
 
 
-## Project Structure
+## Proposed Project Structure
 
 ```
 escrow-service/
@@ -48,6 +48,7 @@ escrow-service/
 │   ├── utils/                   # Reusable helpers (crypto, validators, logger)
 │   │   ├── generateHash.js
 │   │   ├── response.js
+│   │   ├── helpers.js
 │   │   └── constants.js
 │   │
 │   ├── app.js                   # Express app config (routes, middleware)

@@ -14,7 +14,12 @@ export const comparePassword = (plain, hashed) => {
     return bcrypt.compareSync(plain, hashed);
 };
 
-// Generate JWT token
-export const generateToken = (id) => {
-    return jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: "30d"});
+// Generate JWT Access token
+export const accessToken = (id) => {
+    return jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: "20s"});
+}
+
+// Generate JWT Refresh token
+export const refreshToken = (id) => {
+    return jwt.sign({id}, process.env.REFRESH_TOKEN_SECRET, {expiresIn: "30d"});
 }

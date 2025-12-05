@@ -1,6 +1,7 @@
 import express from 'express';
 import authRouter from "./routes/auth.js";
 import mongoose from 'mongoose';
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -14,8 +15,9 @@ mongoose
 
 const PORT = process.env.PORT || 3000;
 
-// Allow Express to parse JSON
+// Allow Express to parse JSON and cookies
 app.use(express.json());
+app.use(cookieParser());
 
 // Authentication Route
 app.use(authRouter);
