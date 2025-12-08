@@ -1,8 +1,9 @@
 import { response, Router } from "express";
 import { User } from "../models/User.js";
-import { comparePassword, accessToken, hashPassword, refreshToken } from "../utils/helpers.js";
-import { authMiddleware } from "../middleware/auth.js";
+import { comparePassword, accessToken, hashPassword, refreshToken, rawApiKey } from "../utils/helpers.js";
+import { apiKeyMiddleware, authMiddleware } from "../middleware/auth.js";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 const router = Router();
 
@@ -56,8 +57,35 @@ router.post("/auth/login", async (request, response) => {
         console.log(error);
     }
 });
+// Creating API authentication key
+router.post("/auth/create-api-key", authMiddleware, async (req, res) => {
+    try {
+        // 1. generate key
+        const rawKey = rawApiKey();
+
+        // 2. hash it before saving
+        const hash = crypto.createHash("sha256").update(rawKey).digest("hex");
+
+        // 3. store in user record
+        await User.findByIdAndUpdate(
+            req.user._id,
+            {
+                apiKey: hash
+            }
+        );
+
+        // 4. return key ONCE (never store raw key)
+        return res.json({
+            message: "API key created",
+            apiKey: rawKey
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Could not create API key" });
+    }
+});
 // Getting user details route:
-router.get("/auth/me", authMiddleware, (req, res) => {
+router.get("/auth/me", authMiddleware, apiKeyMiddleware, (req, res) => {
     res.status(200).json({ user: req.user });
 });
 // Creating refresh route:
