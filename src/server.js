@@ -1,5 +1,6 @@
 import express from 'express';
 import authRouter from "./routes/auth.js";
+import transactionsRouter from "./routes/transaction.js";
 import mongoose from 'mongoose';
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
@@ -21,6 +22,8 @@ app.use(cookieParser());
 
 // Authentication Route
 app.use(authRouter);
+// Transactions Route
+app.use(transactionsRouter);
 
 app.get("/", (req, res) => {
     res.status(200).send("Hello, World!")
