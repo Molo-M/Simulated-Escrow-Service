@@ -1,4 +1,4 @@
-import { response, Router } from "express";
+import { Router } from "express";
 import { User } from "../models/User.js";
 import { comparePassword, accessToken, hashPassword, refreshToken, rawApiKey } from "../utils/helpers.js";
 import { apiKeyMiddleware, authMiddleware } from "../middleware/auth.js";
