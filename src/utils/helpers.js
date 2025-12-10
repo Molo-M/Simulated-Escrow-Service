@@ -16,7 +16,7 @@ export const comparePassword = (plain, hashed) => {
 
 // Generate JWT Access token
 export const accessToken = (id) => {
-    return jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: "20s"});
+    return jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: "10m"});
 };
 
 // Generate JWT Refresh token
