@@ -2,6 +2,7 @@ import { Router } from "express";
 import { Transaction } from "../models/Transaction.js";
 import { authMiddleware } from "../middleware/auth.js";
 import { requireRole } from "../middleware/role.js";
+import { addLedgerEntry } from "../services/ledger.js";
 
 const router = Router();
 
@@ -12,6 +13,15 @@ router.post("/transactions", authMiddleware, requireRole("BUYER"), async (reques
     const newTransaction = new Transaction(body);
     try {
         const savedTransaction = await newTransaction.save();
+
+        // Ledger Genesis Entry
+        await addLedgerEntry(
+            savedTransaction._id,
+            null,
+            "PENDING_PAYMENT",
+            request.user.id
+        );
+
         return response.status(200).json({
             savedTransaction,
         });
@@ -36,9 +46,19 @@ router.post("/transactions/:id/pay", authMiddleware, requireRole("BUYER"), async
       return res.status(400).json({ message: "ERROR: Transaction state has to be PENDING_PAYMENT" });
     }
 
+    const previousState = transaction.state;
+
     // Change to HOLDING
     transaction.state = "HOLDING";
     await transaction.save();
+
+    // Update Ledger
+    await addLedgerEntry(
+        transaction._id,
+        previousState,
+        "HOLDING",
+        req.user.id
+    );
 
     return res.json({ message: "Payment successful", transaction });
 });
@@ -58,9 +78,19 @@ router.post("/transactions/:id/deliver", authMiddleware, requireRole("SELLER"), 
       return res.status(400).json({ message: "ERROR: Transaction state has to be HOLDING" });
     }
 
+    const previousState = transaction.state;
+
     // Change to DELIVERED
     transaction.state = "DELIVERED";
     await transaction.save();
+
+    // Update Ledger
+    await addLedgerEntry(
+        transaction._id,
+        previousState,
+        "DELIVERED",
+        req.user.id
+    );
 
     return res.json({ message: "Delivery successful", transaction });
 });
@@ -80,9 +110,19 @@ router.post("/transactions/:id/approve", authMiddleware, requireRole("BUYER"), a
       return res.status(400).json({ message: "ERROR: Transaction state has to be DELIVERED" });
     }
 
+    const previousState = transaction.state;
+
     // Change to APPROVED
     transaction.state = "APPROVED";
     await transaction.save();
+
+    // Update Ledger
+    await addLedgerEntry(
+        transaction._id,
+        previousState,
+        "APPROVED",
+        req.user.id
+    );
 
     return res.json({ message: "Delivery has been approved successfully!", transaction });
 });
@@ -102,9 +142,19 @@ router.post("/transactions/:id/reject", authMiddleware, requireRole("BUYER"), as
       return res.status(400).json({ message: "ERROR: Transaction state has to be DELIVERED" });
     }
 
+    const previousState = transaction.state;
+
     // Change to REJECTED
     transaction.state = "REJECTED";
     await transaction.save();
+
+    // Update Ledger
+    await addLedgerEntry(
+        transaction._id,
+        previousState,
+        "REJECTED",
+        req.user.id
+    );
 
     return res.json({ message: "Delivery has been rejected!", transaction });
 });
