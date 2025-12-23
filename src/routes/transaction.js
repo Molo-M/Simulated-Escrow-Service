@@ -9,6 +9,7 @@ const router = Router();
 // 1. Buyer creates transaction
 router.post("/transactions", authMiddleware, requireRole("BUYER"), async (request, response) => {
     const { body } = request;
+    body.buyerId = request.user.id;
     body.state = "PENDING_PAYMENT";
     const newTransaction = new Transaction(body);
     try {
