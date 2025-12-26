@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { User } from "../models/User.js";
 import { comparePassword, accessToken, hashPassword, refreshToken, rawApiKey } from "../utils/helpers.js";
-import { apiKeyMiddleware, authMiddleware } from "../middleware/auth.js";
+import { authMiddleware } from "../middleware/auth.js";
+import { apiKeyMiddleware } from "../middleware/apiKey.js";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 
