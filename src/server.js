@@ -1,6 +1,7 @@
 import express from 'express';
 import authRouter from "./routes/auth.js";
 import transactionsRouter from "./routes/transaction.js";
+import ledgerRoutes from "./routes/ledger.js";
 import mongoose from 'mongoose';
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
@@ -24,6 +25,8 @@ app.use(cookieParser());
 app.use(authRouter);
 // Transactions Route
 app.use(transactionsRouter);
+// Ledger Route
+app.use(ledgerRoutes);
 
 app.get("/", (req, res) => {
     res.status(200).send("Hello, World!")
