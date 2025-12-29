@@ -39,9 +39,9 @@ router.post("/auth/register", async (request, response) => {
 // Logging in a user:
 router.post("/auth/login", async (request, response) => {
     try {
-        const findUser = await User.findOne({ name: request.body.name});
+        const findUser = await User.findOne({ email: request.body.email});
         if (!findUser) throw new Error("User not found!");
-        if (!comparePassword(request.body.passwordHash, findUser.passwordHash)) throw new Error("Bad Credentials!");
+        if (!comparePassword(request.body.password, findUser.passwordHash)) throw new Error("Bad Credentials!");
         // Create JWT Refresh and Access tokens:
         const createRefreshToken = refreshToken(findUser.id);
         const createAccessToken = accessToken(findUser.id);
@@ -86,7 +86,8 @@ router.post("/auth/create-api-key", authMiddleware, async (req, res) => {
     }
 });
 // Getting user details route:
-router.get("/auth/me", authMiddleware, apiKeyMiddleware, (req, res) => {
+// REMEMBER TO ADD apiKeyMiddleware
+router.get("/auth/me", authMiddleware, (req, res) => {
     res.status(200).json({ user: req.user });
 });
 // Creating refresh route:
