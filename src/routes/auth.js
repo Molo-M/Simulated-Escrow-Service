@@ -14,7 +14,7 @@ const router = Router();
 router.post("/auth/register", async (request, response) => {
     const { body } = request;
     // Hash the password
-    body.passwordHash = hashPassword(body.passwordHash);
+    body.passwordHash = hashPassword(body.password);
     const newUser = new User(body);
     try {
         const savedUser = await newUser.save();
