@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = ({ setUser }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: ""
   })
   const [error, setError] = useState("")
+  const navigate = useNavigate()
 
   // Function to get form data
   const handleChange = (e) => {
@@ -17,9 +19,13 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const res = await axios.post("/auth/login")
+      const res = await axios.post("/auth/login", formData)
+      localStorage.setItem("token", res.data.token)
+      console.log(res.data)
+      setUser(res.data)
+      navigate("/")
     } catch (error) {
-      
+      setError(error.response?.data?.message || "Login failed")
     }
   }
 
@@ -28,15 +34,15 @@ const Login = () => {
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md border-gray-200">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Login</h2>
         {error && <p className="text-red-500 mb-4 text-sm">{error}</p>}
-        <form action="mb-4">
-          <div className="">
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
             <label className="block text-gray-600 text-sm font-medium mb-1">Email</label>
             <input 
               className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-200 outline-none focus:border-blue-400" 
               placeholder="Enter your email" 
-              type="email" 
-              name="email" 
-              value={formData.email} 
+              type="email"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               autoComplete="off" required />
           </div>
