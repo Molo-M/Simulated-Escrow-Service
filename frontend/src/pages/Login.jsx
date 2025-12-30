@@ -20,9 +20,9 @@ const Login = ({ setUser }) => {
     e.preventDefault()
     try {
       const res = await axios.post("/auth/login", formData)
-      localStorage.setItem("token", res.data.token)
+      localStorage.setItem("token", res.data.accessToken)
       console.log(res.data)
-      setUser(res.data)
+      // setUser(res.data.user)
       navigate("/")
     } catch (error) {
       setError(error.response?.data?.message || "Login failed")

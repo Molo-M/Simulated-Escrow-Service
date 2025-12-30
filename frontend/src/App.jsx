@@ -18,7 +18,7 @@ function App() {
           const res = await axios.get("/auth/me", {
             headers: {Authorization: `Bearer ${token}`}
           })
-          setUser(res.data)
+          setUser(res.data.user)
         } catch (error) {
           setError("Failed to fetch user data")
           localStorage.removeItem("token")
