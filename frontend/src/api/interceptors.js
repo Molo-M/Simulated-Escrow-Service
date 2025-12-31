@@ -14,9 +14,7 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
-api.interceptors.response.use(
-  response => response,
-  async error => {
+api.interceptors.response.use(response => response, async error => {
     const originalRequest = error.config;
 
     if (
