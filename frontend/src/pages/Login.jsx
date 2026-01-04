@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from "axios";
+import api from "../api/axios";
 import { useNavigate } from 'react-router-dom';
 
 const Login = ({ setUser }) => {
@@ -19,7 +20,7 @@ const Login = ({ setUser }) => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const res = await axios.post("/auth/login", formData)
+      const res = await api.post("/auth/login", formData)
       localStorage.setItem("token", res.data.accessToken)
       console.log(res.data)
       // setUser(res.data.user)
