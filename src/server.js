@@ -5,6 +5,7 @@ import ledgerRoutes from "./routes/ledger.js";
 import mongoose from 'mongoose';
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import cors from "cors";
 dotenv.config();
 
 const app = express();
@@ -20,6 +21,12 @@ const PORT = process.env.PORT || 3000;
 // Allow Express to parse JSON and cookies
 app.use(express.json());
 app.use(cookieParser());
+
+// Allow express to use CORS
+app.use(cors({
+  origin: "http://localhost:5173", // frontend
+  credentials: true,               // allow cookies
+}));
 
 // Authentication Route
 app.use(authRouter);

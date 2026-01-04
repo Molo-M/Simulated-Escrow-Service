@@ -24,8 +24,8 @@ router.post("/auth/register", async (request, response) => {
         // Add the Refresh token to the cookie
         response.cookie("refreshToken", createRefreshToken, {
             httpOnly: true,
-            secure: true,
-            sameSite: "strict",
+            secure: false,
+            sameSite: "lax",
         });
         return response.status(200).json({
             savedUser,
@@ -48,8 +48,8 @@ router.post("/auth/login", async (request, response) => {
         // Add the Refresh token to the cookie
         response.cookie("refreshToken", createRefreshToken, {
             httpOnly: true,
-            secure: true,
-            sameSite: "strict",
+            secure: false,
+            sameSite: "lax",
         });
         return response.status(200).json({
             accessToken: createAccessToken
