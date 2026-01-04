@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import api from "./api/axios";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -15,7 +16,7 @@ function App() {
       const token = localStorage.getItem("token")
       if (token) {
         try {
-          const res = await axios.get("/auth/me", {
+          const res = await api.get("/auth/me", {
             headers: {Authorization: `Bearer ${token}`}
           })
           setUser(res.data.user)
