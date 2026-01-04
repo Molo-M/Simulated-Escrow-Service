@@ -28,7 +28,12 @@ router.post("/auth/register", async (request, response) => {
             sameSite: "lax",
         });
         return response.status(200).json({
-            savedUser,
+            user: {
+                id: savedUser._id,
+                username: savedUser.username,
+                email: savedUser.email,
+                role: savedUser.role
+            },
             accessToken: createAccessToken
         });
     } catch (error) {
@@ -52,7 +57,13 @@ router.post("/auth/login", async (request, response) => {
             sameSite: "lax",
         });
         return response.status(200).json({
-            accessToken: createAccessToken
+            accessToken: createAccessToken,
+            user: {
+                id: findUser._id,
+                username: findUser.username,
+                email: findUser.email,
+                role: findUser.role
+            }
         });
     } catch (error) {
         console.log(error);
