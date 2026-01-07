@@ -2,7 +2,6 @@ import { Router } from "express";
 import { User } from "../models/User.js";
 import { comparePassword, accessToken, hashPassword, refreshToken, rawApiKey } from "../utils/helpers.js";
 import { authMiddleware } from "../middleware/auth.js";
-import { apiKeyMiddleware } from "../middleware/apiKey.js";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 
@@ -97,7 +96,6 @@ router.post("/auth/create-api-key", authMiddleware, async (req, res) => {
     }
 });
 // Getting user details route:
-// REMEMBER TO ADD apiKeyMiddleware
 router.get("/auth/me", authMiddleware, (req, res) => {
     res.status(200).json({ user: req.user });
 });
