@@ -1,14 +1,6 @@
 # Simulated Escrow Service
 
-## Overview
-
-The Simulated Escrow Service is a backend-focused fintech project that models the core mechanics of a real-world escrow system. It demonstrates how secure financial transactions can be orchestrated between buyers and sellers using modern backend architecture, strong authentication, strict state management, and an immutable ledger inspired by blockchain principles.
-
-The project focuses on correctness, security, and auditability rather than UI polish. It is designed as a learning and portfolio project that mirrors how escrow, custody, and settlement systems are implemented in production fintech environments.
-
-The implementation covers project setup, authentication, escrow transaction logic, immutable ledger design, and role-based authorization.
-
----
+A backend-focused fintech project modeling the core mechanics of a secure escrow system. This service demonstrates strict state management, role-based authorization, and an immutable ledger system inspired by blockchain principles.
 
 ## What Is an Escrow Service
 
@@ -26,109 +18,85 @@ This project simulates that workflow using secure APIs and a controlled transact
 
 ---
 
-## Core Features Implemented
+## 📋 Table of Contents
 
-### User Authentication and Authorization
-
-• Secure user registration and login
-
-• Password hashing using bcrypt
-
-• JWT-based authentication for user sessions
-
-• API key generation and validation for machine-to-machine access
-
-• Role-based authorization for buyer, seller, and admin actions
-
-### Escrow Transaction Engine
-
-• Buyers can create escrow transactions
-
-• Buyers simulate payment into escrow
-
-• Sellers mark transactions as delivered
-
-• Buyers approve or reject delivery
-
-• Strict enforcement of valid state transitions
-
-• Clear separation of buyer and seller permissions
-
-### Immutable Ledger System
-
-• Every transaction state change is permanently recorded
-
-• Ledger entries are chained using cryptographic hashes
-
-• Each entry references the previous entry to prevent tampering
-
-• Ledger integrity can be verified programmatically
-
-• Ledger data is read-only and audit-friendly
-
-### Security Design Principles
-
-• Stateless authentication using JWTs
-
-• API keys stored hashed and never returned after creation
-
-• Middleware-based access control
-
-• Separation between user actions and system actions
-
-• Defensive error handling and validation
+* [Overview](#overview)
+* [Core Features](#core-features)
+* [Technology Stack](#technology-stack)
+* [Installation & Setup](#installation--setup)
+* [Backend Architecture Overview](#backend-architecture-overview)
+* [API Documentation](#api-documentation)
+* [Transaction Logic](#transction-logic)
+* [Immutable Ledger Design](#immutable-ledger-design)
+* [Project Scope](#project-scope)
 
 ---
 
-## Project Scope and Completion Status
+## Overview
 
-Completed phases:
+An escrow service acts as a trusted intermediary that temporarily holds funds during a transaction. This project focuses on the **correctness, security, and auditability** of the backend logic rather than the UI.
 
-1. Project setup and fundamentals
-2. User authentication system using JWT and API keys
-3. Core escrow transaction system
-4. Immutable ledger system
-5. Role-based authorization middleware
+---
 
-Not implemented:
-• Frontend application
+## Core Features
 
-• Rate limiting and logging
-
-• Automated testing
-
-• Deployment
-
-The project intentionally stops at a backend-complete state to focus on fintech-relevant backend architecture.
+* **Secure Authentication:** JWT-based sessions for users and hashed API keys for machine-to-machine access.
+* **Role-Based Access Control (RBAC):** Distinct permissions for Buyers, Sellers, and Admins.
+* **State Machine Enforcement:** Transactions follow a strict lifecycle to prevent fraudulent state changes.
+* **Immutable Ledger:** Every state change is cryptographically linked to the previous entry, ensuring a tamper-proof audit trail.
 
 ---
 
 ## Technology Stack
 
-Backend:
+* **Runtime:** Node.js
+* **Framework:** Express.js
+* **Database:** MongoDB via Mongoose
+* **Security:** Bcrypt (hashing), JWT (auth), Crypto (ledger hashing)
 
-• Node.js
+---
 
-• Express.js
+## Installation & Setup
 
-• MongoDB
+### Prerequisites
 
-• Mongoose
+* Node.js (v16.x or higher)
+* MongoDB (Local instance or Atlas URI)
+
+### Steps
+
+1. **Clone the repository:**
+```bash
+git clone https://github.com/Molo-M/Simulated-Escrow-Service.git
+cd Simulated-Escrow-Service
+
+```
 
 
-Security and Authentication:
+2. **Install dependencies:**
+```bash
+npm install
 
-• JSON Web Tokens
+```
 
-• bcrypt
 
-• crypto
+3. **Configure environment variables:**
+Create a `.env` file in the root directory:
+```env
+PORT=3000
+JWT_SECRET=your_super_secret_key
+API_KEY_SECRET=your_api_key_secret
 
-Utilities:
+```
 
-• dotenv
 
-• cors
+4. **Start the server:**
+```bash
+npm start
+
+```
+
+
 
 ---
 
@@ -145,8 +113,7 @@ User
   email,
   passwordHash,
   role: "buyer" | "seller" | "admin",
-  apiKey,
-  createdAt
+  apiKey
 }
 ```
 
@@ -177,107 +144,12 @@ LedgerEntry
   prevHash
 }
 ```
-
----
-
-## Transaction State Machine
-
-The escrow system enforces a strict state machine to prevent invalid transitions.
-
-Valid transitions:
-
-• PENDING_PAYMENT to HOLDING
-
-• HOLDING to DELIVERED
-
-• DELIVERED to RELEASED
-
-• HOLDING or DELIVERED to CANCELED
-
-Invalid transitions are rejected at the API level.
-
-This ensures that escrow funds cannot be released, canceled, or modified out of order.
-
----
-
-## Immutable Ledger Design
-
-Every transaction state change creates a ledger entry containing:
-
-• Transaction ID
-
-• Previous state
-
-• New state
-
-• Timestamp
-
-• Acting user
-
-• Cryptographic hash
-
-• Hash of the previous ledger entry
-
-Each entry is cryptographically linked to the previous one, forming a chain.
-If any historical entry is altered, all subsequent hashes become invalid.
-
-A ledger verification service recalculates hashes from the beginning of the chain to confirm integrity.
-
-This design demonstrates core concepts used in financial auditing and blockchain-inspired systems.
-
----
-
-## Authentication Model
-
-### JWT Authentication
-
-Used for user-driven actions:
-
-• Login
-
-• Creating transactions
-
-• Approving or delivering escrow actions
-
-JWTs identify users and enforce session-based permissions.
-
-### API Key Authentication
-
-Used for system and machine-to-machine access:
-
-• Ledger verification
-
-• Admin and audit endpoints
-
-• Future integrations or background services
-
-API keys are hashed before storage and compared securely on each request.
-
----
-
-## Role-Based Authorization
-
-Roles are enforced using middleware:
-
-• Buyers can create and approve transactions
-
-• Sellers can deliver transactions assigned to them
-
-• Admins can access ledger data
-
-This ensures that even authenticated users cannot perform unauthorized actions.
-
----
-
-## Project Folder Structure
+### Project Folder Structure
 
 ```
 Simulated-Escrow-Service/
 │
 ├── src/
-│   ├── config/
-│   │   └── db.js                # MongoDB connection setup
-│   │
 │   ├── models/                  # Mongoose models/schemas
 │   │   ├── User.js
 │   │   ├── Transaction.js
@@ -311,49 +183,82 @@ Simulated-Escrow-Service/
 
 ---
 
-## Environment Variables
+## API Documentation
 
-Required environment variables:
+### Authentication
 
-• JWT_SECRET
+| Method | Endpoint | Access | Description |
+| --- | --- | --- | --- |
+| `POST` | `/api/auth/register` | Public | Create new user account |
+| `POST` | `/api/auth/login` | Public | Returns JWT and user info |
 
-• REFRESH_TOKEN_SECRET
+### Transactions
 
-• PORT
+| Method | Endpoint | Access | Description |
+| --- | --- | --- | --- |
+| `POST` | `/api/transactions` | Buyer | Initiate a new escrow |
+| `PATCH` | `/api/transactions/:id/pay` | Buyer | Transition from PENDING to HOLDING |
+| `PATCH` | `/api/transactions/:id/deliver` | Seller | Mark item as delivered |
+| `PATCH` | `/api/transactions/:id/release` | Buyer | Release funds to Seller |
 
----
+### Ledger (Audit)
 
-## What This Project Demonstrates
-
-This project demonstrates practical fintech backend skills including:
-
-• Secure authentication design
-
-• Role-based access control
-
-• Transaction state machines
-
-• Immutable audit logs
-
-• API security patterns
-
-• Clean backend architecture
-
-• Separation of concerns
-
-• Real-world escrow logic
+| Method | Endpoint | Access | Description |
+| --- | --- | --- | --- |
+| `GET` | `/api/ledger` | Admin | View all ledger entries |
+| `GET` | `/api/ledger/verify` | API Key | Run cryptographic chain verification |
 
 ---
 
-## Disclaimer
+## Transction Logic
+* Buyers can create escrow transactions
+* Buyers simulate payment into escrow
+* Sellers mark transactions as delivered
+* Buyers approve or reject delivery
+* Strict enforcement of valid state transitions
+* Clear separation of buyer and seller permissions
 
-This project is a simulation intended for learning and portfolio purposes only.
-It does not handle real payments and should not be used in production environments.
+---
+
+## Immutable Ledger Design
+
+To ensure auditability, the system uses a chained hashing mechanism. Each `LedgerEntry` calculates its hash based on:
+
+* Each entry includes a timestamp, transaction ID, previous state, new state, and the user who performed the action.
+* Entries contain a unique hash and a prevHash (the hash of the preceding entry).
+* If any past entry is modified, the entire chain of hashes breaks, allowing for easy auditing.
+* A verification function recalculates all hashes to ensure the consistency of the chain
+
+If a record is altered, the chain breaks, and the `/api/ledger/verify` endpoint will return a failure status.
+
+---
+
+## Project Scope
+
+**Completed:**
+
+* Core Escrow State Machine
+* JWT & API Key authentication systems
+* Cryptographic Ledger implementation
+* Mongoose Schema Design
+
+**Not Implemented (Roadmap):**
+
+* Frontend Dashboard
+* Automated Unit & Integration Testing
+* Rate Limiting (Helmet/Express-rate-limit)
+* Deployment (Docker/AWS)
+
+---
+
+## License
+
+This project is licensed under the MIT License
 
 ---
 
 ## Author
 
-Built as a learning-focused fintech backend project to demonstrate secure transaction processing and auditability concepts commonly used in financial systems.
+Built as a portfolio project to demonstrate secure fintech architecture and state-managed financial workflows.
 
 ---
