@@ -3,11 +3,12 @@ import { authMiddleware } from "../middleware/auth.js";
 import { requireRole } from "../middleware/role.js";
 import { LedgerEntry } from "../models/LedgerEntry.js";
 import { verifyLedgerChain } from "../services/ledger.js";
+import { apiKeyMiddleware } from "../middleware/apiKey.js";
 
 const router = Router();
 
 // GET /ledger — Admin only
-router.get("/ledger", authMiddleware, requireRole("ADMIN"), async (req, res) => {
+router.get("/ledger", authMiddleware, apiKeyMiddleware, requireRole("ADMIN"), async (req, res) => {
     try {
       const ledgerEntries = await LedgerEntry.find()
         .sort({ timestamp: -1 }) // newest first
@@ -28,7 +29,7 @@ router.get("/ledger", authMiddleware, requireRole("ADMIN"), async (req, res) => 
  * GET /ledger/:transactionId
  * Admin-only: View full ledger for a transaction
  */
-router.get("/ledger/:transactionId", authMiddleware, requireRole("ADMIN"), async (req, res) => {
+router.get("/ledger/:transactionId", authMiddleware, apiKeyMiddleware, requireRole("ADMIN"), async (req, res) => {
     try {
       const { transactionId } = req.params;
 
@@ -55,7 +56,7 @@ router.get("/ledger/:transactionId", authMiddleware, requireRole("ADMIN"), async
  * POST /ledger/verify
  * Admin-only: Verify ledger integrity
  */
-router.post("/ledger/verify", authMiddleware, requireRole("ADMIN"), async (req, res) => {
+router.post("/ledger/verify", authMiddleware, apiKeyMiddleware, requireRole("ADMIN"), async (req, res) => {
     try {
       // 1. Get all unique transaction IDs
       const transactionIds = await LedgerEntry.distinct("transactionId");
