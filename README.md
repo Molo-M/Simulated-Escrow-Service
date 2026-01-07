@@ -31,34 +31,51 @@ This project simulates that workflow using secure APIs and a controlled transact
 ### User Authentication and Authorization
 
 • Secure user registration and login
+
 • Password hashing using bcrypt
+
 • JWT-based authentication for user sessions
+
 • API key generation and validation for machine-to-machine access
+
 • Role-based authorization for buyer, seller, and admin actions
 
 ### Escrow Transaction Engine
 
 • Buyers can create escrow transactions
+
 • Buyers simulate payment into escrow
+
 • Sellers mark transactions as delivered
+
 • Buyers approve or reject delivery
+
 • Strict enforcement of valid state transitions
+
 • Clear separation of buyer and seller permissions
 
 ### Immutable Ledger System
 
 • Every transaction state change is permanently recorded
+
 • Ledger entries are chained using cryptographic hashes
+
 • Each entry references the previous entry to prevent tampering
+
 • Ledger integrity can be verified programmatically
+
 • Ledger data is read-only and audit-friendly
 
 ### Security Design Principles
 
 • Stateless authentication using JWTs
+
 • API keys stored hashed and never returned after creation
+
 • Middleware-based access control
+
 • Separation between user actions and system actions
+
 • Defensive error handling and validation
 
 ---
@@ -75,8 +92,11 @@ Completed phases:
 
 Not implemented:
 • Frontend application
+
 • Rate limiting and logging
+
 • Automated testing
+
 • Deployment
 
 The project intentionally stops at a backend-complete state to focus on fintech-relevant backend architecture.
@@ -86,19 +106,28 @@ The project intentionally stops at a backend-complete state to focus on fintech-
 ## Technology Stack
 
 Backend:
+
 • Node.js
+
 • Express.js
+
 • MongoDB
+
 • Mongoose
 
+
 Security and Authentication:
+
 • JSON Web Tokens
+
 • bcrypt
+
 • crypto
 
 Utilities:
+
 • dotenv
-• uuid
+
 • cors
 
 ---
@@ -156,9 +185,13 @@ LedgerEntry
 The escrow system enforces a strict state machine to prevent invalid transitions.
 
 Valid transitions:
+
 • PENDING_PAYMENT to HOLDING
+
 • HOLDING to DELIVERED
+
 • DELIVERED to RELEASED
+
 • HOLDING or DELIVERED to CANCELED
 
 Invalid transitions are rejected at the API level.
@@ -170,12 +203,19 @@ This ensures that escrow funds cannot be released, canceled, or modified out of 
 ## Immutable Ledger Design
 
 Every transaction state change creates a ledger entry containing:
+
 • Transaction ID
+
 • Previous state
+
 • New state
+
 • Timestamp
+
 • Acting user
+
 • Cryptographic hash
+
 • Hash of the previous ledger entry
 
 Each entry is cryptographically linked to the previous one, forming a chain.
@@ -192,8 +232,11 @@ This design demonstrates core concepts used in financial auditing and blockchain
 ### JWT Authentication
 
 Used for user-driven actions:
+
 • Login
+
 • Creating transactions
+
 • Approving or delivering escrow actions
 
 JWTs identify users and enforce session-based permissions.
@@ -201,8 +244,11 @@ JWTs identify users and enforce session-based permissions.
 ### API Key Authentication
 
 Used for system and machine-to-machine access:
+
 • Ledger verification
+
 • Admin and audit endpoints
+
 • Future integrations or background services
 
 API keys are hashed before storage and compared securely on each request.
@@ -212,8 +258,11 @@ API keys are hashed before storage and compared securely on each request.
 ## Role-Based Authorization
 
 Roles are enforced using middleware:
+
 • Buyers can create and approve transactions
+
 • Sellers can deliver transactions assigned to them
+
 • Admins can access ledger data
 
 This ensures that even authenticated users cannot perform unauthorized actions.
@@ -265,8 +314,11 @@ Simulated-Escrow-Service/
 ## Environment Variables
 
 Required environment variables:
+
 • JWT_SECRET
+
 • REFRESH_TOKEN_SECRET
+
 • PORT
 
 ---
@@ -274,13 +326,21 @@ Required environment variables:
 ## What This Project Demonstrates
 
 This project demonstrates practical fintech backend skills including:
+
 • Secure authentication design
+
 • Role-based access control
+
 • Transaction state machines
+
 • Immutable audit logs
+
 • API security patterns
+
 • Clean backend architecture
+
 • Separation of concerns
+
 • Real-world escrow logic
 
 ---
